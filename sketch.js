@@ -27,12 +27,21 @@ function onEnabled() {
 
   // WHEN STARTING OUT USE THE CODE BELOW TO FIND YOUR DEVICE NAME
   // THE LOOP BELOW WILL LOG EVERY CONNECTED MIDI DEVICE TO THE CONSOLE
-  // WebMidi.inputs.forEach((device, index) => {
-  //   console.log(index + ": " + device.name);
-  // });
+  // THERE MAY BE DEFAULT DEVICES ALREADY ON YOUR SYSTEM, BUT HARDWARE MIDI
+  // DEVICES WILL USUALLY HAVE A NAME YOU RECOGNISE
+  WebMidi.inputs.forEach((device, index) => {
+    console.log(index + ": " + device.name);
+  });
 
-  // ADD YOUR DEVICE NAME INSTEAD OF "MPD218 Port A"
-  midiInput = WebMidi.getInputByName("MPD218 Port A");
+  // HERE ARE SOME EXAMPLE DEVICE NAMES YOU CAN USE
+  // THE ABOVE CODE GIVES YOU THE EXACT NAME FOR YOUR DEVICE
+  // "MPD218 Port A"
+  // "LPD8"
+  // "Launch Control XL"
+
+  midiInput = WebMidi.getInputByName("Launch Control XL");
+  // midiInput = WebMidi.getInputByName("MPD218 Port A");
+  // midiInput = WebMidi.getInputByName("LPD8");
 
   // if we dont find the device, exit
   if (!midiInput) {
@@ -63,13 +72,17 @@ function windowResized() {
 // these are called whenever a MIDI message is received
 // the 'note', 'pot', and 'touch' objects contain useful information about the message
 function noteOn(note) {
-  if (note.note.number === 48) {
+  // log the note number and value to the console
+  console.log("note: " + note.note.number + " value: " + note.value);
+  if (note.note.number === 41) {
     circleSize = midiMap(note.value, 0, width);
     circleHue = midiMap(note.value, 0, 360);
   }
 }
 
 function controlChange(pot) {
+  // log the controller number and value to the console
+  console.log("pot: " + pot.controller.number + " value: " + pot.value);
   if (pot.controller.number === 3) {
     circleSize = midiMap(pot.value, 0, width);
   } else if (pot.controller.number === 9) {
@@ -81,8 +94,10 @@ function controlChange(pot) {
   }
 }
 
+// some MIDI devices support pressure/aftertouch messages
+// this function is called whenever a pressure message is received
 function pressure(touch) {
-  console.log(touch);
+  console.log("pressure: " + touch.value);
   circleStroke = midiMap(touch.value, 0, 100);
 }
 
