@@ -39,8 +39,8 @@ function onEnabled() {
   // "LPD8"
   // "Launch Control XL"
 
-  midiInput = WebMidi.getInputByName("Launch Control XL");
-  // midiInput = WebMidi.getInputByName("MPD218 Port A");
+  // midiInput = WebMidi.getInputByName("Launch Control XL");
+  midiInput = WebMidi.getInputByName("MPD218 Port A");
   // midiInput = WebMidi.getInputByName("LPD8");
 
   // if we dont find the device, exit
